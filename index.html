@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Debug Challenge</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+      }
+
+      .console {
+        background: #1e1e1e;
+        border-radius: 8px;
+        padding: 20px;
+        font-family: "Courier New", monospace;
+        max-height: 500px;
+        overflow-y: auto;
+        margin-bottom: 30px;
+        border: 3px solid #34495e;
+      }
+
+      .error-item {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .error-item.error {
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid #e74c3c;
+      }
+
+      .error-item.solved {
+        background: rgba(39, 174, 96, 0.1);
+        border-left: 4px solid #27ae60;
+      }
+
+      .status {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .status.error {
+        background: #e74c3c;
+        animation: pulse 2s infinite;
+      }
+
+      .status.solved {
+        background: #27ae60;
+      }
+
+      .error-number {
+        background: #3498db;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .error-text {
+        color: #e74c3c;
+        font-size: 14px;
+      }
+
+      .solved-text {
+        color: #27ae60;
+        font-size: 14px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      button {
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: transform 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      .progress {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .progress.complete {
+        color: #27ae60;
+      }
+
+      .instructions {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .instructions h3 {
+        margin-top: 0;
+        color: #495057;
+      }
+
+      .instructions p {
+        margin-bottom: 8px;
+        color: #6c757d;
+      }
+
+      .file-info {
+        background: #e3f2fd;
+        border: 1px solid #2196f3;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .file-info h3 {
+        margin-top: 0;
+        color: #1976d2;
+      }
+
+      .file-info code {
+        background: #1e88e5;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🐛 JavaScript Debug Challenge</h1>
+      <p class="subtitle">
+        Fix the numbered errors by editing the bugs.js file!
+      </p>
+
+      <div class="file-info">
+        <h3>📂 File Structure:</h3>
+        <p>
+          <strong>This file (index.html):</strong> Shows error status and runs
+          tests
+        </p>
+        <p>
+          <strong>bugs.js file:</strong> Contains all the buggy code you need to
+          fix
+        </p>
+        <p>Edit the <code>bugs.js</code> file to fix each numbered error!</p>
+      </div>
+
+      <div class="instructions">
+        <h3>📝 Instructions:</h3>
+        <p>
+          1. Each error below has a number that corresponds to a function in
+          <code>bugs.js</code>
+        </p>
+        <p>2. Fix the JavaScript errors in the <code>bugs.js</code> file</p>
+        <p>3. Click "Check for Errors" to test your fixes</p>
+        <p>4. Watch the errors turn from red to green as you fix them!</p>
+      </div>
+
+      <div class="controls">
+        <button onclick="runTests()">🔍 Check for Errors</button>
+        <button onclick="resetErrors()">🔄 Reset All</button>
+      </div>
+
+      <div id="console" class="console">
+        <div class="error-item error">
+          <div class="error-number">?</div>
+          <div class="status error"></div>
+          <div class="error-text">Loading errors...</div>
+        </div>
+      </div>
+
+      <div id="progress" class="progress">Errors Remaining: 15 / 15</div>
+    </div>
+
+    <!-- Load the buggy code file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <script src="tracker.js"></script>
+
+    <!-- Include the bugs.js file with all the errors to fix -->
+    <script src="bugs.js"></script>
+  </body>
+</html>
